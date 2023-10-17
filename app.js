@@ -1,4 +1,5 @@
 const express = require('express')
+const { nanoid } = require('nanoid')
 const fs = require('fs')
 const path = require('path')
 const dbData = require('./db/db.json')
@@ -17,7 +18,7 @@ app.post('/api/notes', (req, res) => {
 
 	const { title, text } = req.body
 
-	const newNote = { title, text }
+	const newNote = { title, text, id: nanoid(5) }
 
 	dbData.push(newNote)
 
