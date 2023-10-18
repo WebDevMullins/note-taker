@@ -3,6 +3,7 @@ const fs = require('fs')
 const path = require('path')
 const { nanoid } = require('nanoid')
 const db = require('../db/db.json')
+const writeToFile = require('../helpers/fsWrite')
 
 // GET Route for retrieving all notes
 notes.get('/', (req, res) => res.json(db))
@@ -13,22 +14,26 @@ notes.post('/', (req, res) => {
 
 	const { title, text } = req.body
 
-	const newNote = { title, text, id: nanoid(5) }
-
-	db.push(newNote)
-
-	fs.writeFile(path.join('./db/db.json'), JSON.stringify(db), (err) => {
-		if (err) {
-			console.error('Error writing to db.json', err)
-		} else {
-			const response = {
-				status: 'success',
-				body: newNote
-			}
-			console.log(response)
-			res.status(201).json(response)
+	if (title && text) {
+		const newNote = {
+			title,
+			text,
+			id: nanoid(5)
 		}
-	})
+
+		db.push(newNote)
+
+		writeToFile('./db/db.json', db)
+
+		const response = {
+			status: 'success',
+			body: newNote
+		}
+
+		res.json(response)
+	} else {
+		res.json('Error adding note')
+	}
 })
 
 notes.delete('/:id', (req, res) => {
