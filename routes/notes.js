@@ -8,8 +8,6 @@ notes.get('/', (req, res) => res.status(200).json(db))
 
 // POST route for adding a note
 notes.post('/', (req, res) => {
-	// Log POST method was made
-	console.log(`${req.method} request received to add a note`)
 	// Deconstruct body
 	const { title, text } = req.body
 	// Validation to make sure body contains both a title and text
@@ -30,16 +28,12 @@ notes.post('/', (req, res) => {
 		}
 
 		res.status(201).json(response)
-	} else {
-		res.console.error('Error adding note')
 	}
 })
 // DELETE route for removing a note
 notes.delete('/:id', (req, res) => {
 	// Set params.id
 	const noteId = req.params.id
-	// Log Delete method was make along with the note id
-	console.log(`${req.method} request received to remove note with id ${noteId}`)
 	// Check to see if note id exists in array
 	const findId = db.some((note) => note.id === noteId)
 
@@ -49,12 +43,8 @@ notes.delete('/:id', (req, res) => {
 		// Write to file with the note removed
 		writeToFile('./db/db.json', delNoteById)
 
-		console.log(`Deleted note with id ${noteId}`)
-
 		res.sendStatus(204)
 	} else {
-		console.log(`Error deleting note ${noteId}`)
-
 		res.status(500).json(`Error deleting note ${noteId}`)
 	}
 })
