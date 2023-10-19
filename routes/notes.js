@@ -3,11 +3,12 @@ const { nanoid } = require('nanoid')
 const db = require('../db/db.json')
 const writeToFile = require('../helpers/fsWrite')
 
+notes.route('/')
 // GET Route for retrieving all notes
-notes.get('/', (req, res) => res.status(200).json(db))
+.get((req, res) => res.status(200).json(db))
 
 // POST route for adding a note
-notes.post('/', (req, res) => {
+.post((req, res) => {
 	// Deconstruct body
 	const { title, text } = req.body
 	// Validation to make sure body contains both a title and text
@@ -30,6 +31,7 @@ notes.post('/', (req, res) => {
 		res.status(201).json(response)
 	}
 })
+
 // DELETE route for removing a note
 notes.delete('/:id', (req, res) => {
 	// Set params.id
