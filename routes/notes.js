@@ -49,11 +49,11 @@ notes.delete('/:id', (req, res) => {
 
 			if (findId) {
 				// If note id exists, filter out note with id
-				const delNoteById = db.filter((note) => note.id !== noteId)
+				const delNoteById = json.filter((note) => note.id !== noteId)
 				// Write to file with the note removed
 				writeDbFile(dbFile, delNoteById)
-
-				res.sendStatus(204)
+				res.status(204).json(`Note ${noteId} has been deleted 🗑️`)
+				console.log(`Note ${noteId} has been deleted 🗑️`)
 			} else {
 				res.status(500).json(`Error deleting note ${noteId}`)
 			}
