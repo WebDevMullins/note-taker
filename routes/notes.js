@@ -1,14 +1,16 @@
 const notes = require('express').Router()
 const { nanoid } = require('nanoid')
+const path = require('path')
 const db = require('../db/db.json')
-const dbPath = './db/db.json'
+const dbFile = path.join(__dirname, '../db/db.json')
 const { readDbFile, writeDbFile } = require('../helpers/fsUtils')
+
 
 notes
 	.route('/')
 	// GET Route for retrieving all notes
 	.get((req, res) => {
-		readDbFile(dbPath).then((data) => res.json(JSON.parse(data)))
+		readDbFile(dbFile).then((data) => res.json(JSON.parse(data)))
 	})
 
 	// POST route for adding a note
@@ -25,7 +27,7 @@ notes
 			// Add note to db array
 			db.push(newNote)
 			// Write to file with added note
-			writeDbFile(dbPath, db)
+			writeDbFile(dbFile, db)
 
 			const response = {
 				status: 'success',
@@ -47,9 +49,9 @@ notes.delete('/:id', (req, res) => {
 		// If note id exists, filter out note with id
 		const delNoteById = db.filter((note) => note.id !== noteId)
 		// Write to file with the note removed
-		writeDbFile(dbPath, delNoteById)
+		writeDbFile(dbFile, delNoteById)
 
-		res.sendStatustatus(204)
+		res.sendStatus(204)
 	} else {
 		res.status(500).json(`Error deleting note ${noteId}`)
 	}
