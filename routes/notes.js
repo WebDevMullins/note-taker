@@ -5,7 +5,6 @@ const db = require('../db/db.json')
 const dbFile = path.join(__dirname, '../db/db.json')
 const { readDbFile, writeDbFile } = require('../helpers/fsUtils')
 
-
 notes
 	.route('/')
 	// GET Route for retrieving all notes
@@ -42,19 +41,23 @@ notes
 notes.delete('/:id', (req, res) => {
 	// Set params.id
 	const noteId = req.params.id
-	// Check to see if note id exists in array
-	const findId = db.some((note) => note.id === noteId)
+	readDbFile(dbFile)
+		.then((data) => JSON.parse(data))
+		.then((json) => {
+			// Check to see if note id exists in array
+			const findId = json.some((note) => note.id === noteId)
 
-	if (findId) {
-		// If note id exists, filter out note with id
-		const delNoteById = db.filter((note) => note.id !== noteId)
-		// Write to file with the note removed
-		writeDbFile(dbFile, delNoteById)
+			if (findId) {
+				// If note id exists, filter out note with id
+				const delNoteById = db.filter((note) => note.id !== noteId)
+				// Write to file with the note removed
+				writeDbFile(dbFile, delNoteById)
 
-		res.sendStatus(204)
-	} else {
-		res.status(500).json(`Error deleting note ${noteId}`)
-	}
+				res.sendStatus(204)
+			} else {
+				res.status(500).json(`Error deleting note ${noteId}`)
+			}
+		})
 })
 
 module.exports = notes
